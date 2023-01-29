@@ -40,3 +40,4 @@ in case it was wrongly inputted
 - As a user, I want to be able to see how close I am to "pity"
 - As a user, I want to be able to see if I am guaranteed to win
 the "50/50"
+- As a user, I want to be able to see how many "fate points" I have

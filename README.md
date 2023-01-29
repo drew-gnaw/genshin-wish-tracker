@@ -27,3 +27,16 @@ means, the vast majority must be **wished** for.
  tools needed to use the mechanic optimally. I have also 
  lost my wish history to time several times after relying 
  on the in-game wish history.
+ 
+
+## User Stories
+
+- As a user, I want to be able to add a wish to my wish history
+- As a user, I want to be able to view my wish history
+- As a user, I want to be able to see the probability that I will
+obtain a given item in my next wish
+- As a user, I want to be able to remove a wish from my wish history
+in case it was wrongly inputted
+- As a user, I want to be able to see how close I am to "pity"
+- As a user, I want to be able to see if I am guaranteed to win
+the "50/50"

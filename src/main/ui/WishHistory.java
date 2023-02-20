@@ -1,9 +1,8 @@
-package model;
+package ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import model.*;
+
+import java.util.*;
 
 // represents the wishing history on the three types of banners
 public class WishHistory {
@@ -22,7 +21,7 @@ public class WishHistory {
             "Summit Shaper", "The Unforged", "Thundering Pulse", "Tulaytullah's Remembrance",
             "Vortex Vanquisher", "Wolf's Gravestone"));
 
-    public static final List<String> FOUR_STARS = new ArrayList<>(Arrays.asList(
+    private static final List<String> FOUR_STARS = new ArrayList<>(Arrays.asList(
             "Faruzan", "Sayu", "Heizou", "Sucrose", "Chongyun", "Diona", "Kaeya", "Layla",
             "Rosaria", "Collei", "Beidou", "Dori", "Fischl", "Sara", "Shinobu", "Lisa",
             "Razor", "Gorou", "Ningguang", "Noelle", "Yun Jin", "Barbara", "Candace", "Xingqiu",
@@ -32,14 +31,14 @@ public class WishHistory {
             "Rainslasher", "Sacrificial Greatsword", "The Bell", "Dragon's Bane", "Favonius Lance",
             "Favonius Sword", "Lion's Roar", "Sacrificial Sword", "The Flute"));
 
-    public static final List<String> THREE_STARS = new ArrayList<>(Arrays.asList(
+    private static final List<String> THREE_STARS = new ArrayList<>(Arrays.asList(
             "Black Tassel", "Bloodtainted Greatsword", "Cool Steel", "Debate Club", "Emerald Orb",
             "Ferrous Shadow", "Harbinger of Dawn", "Magic Guide", "Raven Bow", "Sharpshooter's Oath",
             "Skyrider Sword", "Slingshot", "Thrilling Tales of Dragon Slayers"));
 
-    private List<Wish> standardBannerHistory;
-    private List<Wish> characterBannerHistory;
-    private List<Wish> weaponBannerHistory;
+    private Banner standardBannerHistory;
+    private Banner characterBannerHistory;
+    private Banner weaponBannerHistory;
     private Scanner input;
 
     public WishHistory() {
@@ -47,15 +46,15 @@ public class WishHistory {
     }
 
     public List<Wish> getStandardBannerHistory() {
-        return standardBannerHistory;
+        return standardBannerHistory.getWishes();
     }
 
     public List<Wish> getCharacterBannerHistory() {
-        return characterBannerHistory;
+        return characterBannerHistory.getWishes();
     }
 
     public List<Wish> getWeaponBannerHistory() {
-        return weaponBannerHistory;
+        return weaponBannerHistory.getWishes();
     }
 
     private void runWishTracker() {
@@ -102,20 +101,20 @@ public class WishHistory {
         System.out.println("w -> Weapon Banner\ns -> Standard Banner");
         String banner = input.next();
         if (banner.equals("c")) {
-            if (checkIfEmpty(characterBannerHistory)) {
+            if (checkIfEmpty(characterBannerHistory.getWishes())) {
                 return;
             }
-            characterBannerHistory.remove(characterBannerHistory.size() - 1);
+            characterBannerHistory.getWishes().remove(characterBannerHistory.getSize() - 1);
         } else if (banner.equals("w")) {
-            if (checkIfEmpty(weaponBannerHistory)) {
+            if (weaponBannerHistory.checkEmpty()) {
                 return;
             }
-            weaponBannerHistory.remove(weaponBannerHistory.size() - 1);
+            weaponBannerHistory.getWishes().remove(weaponBannerHistory.getSize() - 1);
         } else if (banner.equals("s")) {
-            if (checkIfEmpty(standardBannerHistory)) {
+            if (standardBannerHistory.checkEmpty()) {
                 return;
             }
-            standardBannerHistory.remove(standardBannerHistory.size() - 1);
+            standardBannerHistory.getWishes().remove(standardBannerHistory.getSize() - 1);
         } else {
             System.out.println("Invalid Input!");
             return;
@@ -156,8 +155,9 @@ public class WishHistory {
     }
 
     // EFFECTS: prints out the contents of a banner history
-    private void printWishes(List<Wish> wishes) {
+    private void printWishes(Banner banner) {
         int count = 1;
+        List<Wish> wishes = banner.getWishes();
         System.out.println("--------");
         for (Wish w : wishes) {
             System.out.println(count + ". " + w.getResult() + ", rarity: " + w.getRarity());
@@ -182,13 +182,13 @@ public class WishHistory {
             String result = input.next();
             switch (banner) {
                 case "c":
-                    characterBannerHistory.add(new Wish(result, getRarity(result)));
+                    characterBannerHistory.addWish(new Wish(result, getRarity(result)));
                     break;
                 case "w":
-                    weaponBannerHistory.add(new Wish(result, getRarity(result)));
+                    weaponBannerHistory.addWish(new Wish(result, getRarity(result)));
                     break;
                 case "s":
-                    standardBannerHistory.add(new Wish(result, getRarity(result)));
+                    standardBannerHistory.addWish(new Wish(result, getRarity(result)));
             }
             System.out.println("Recorded Wish!");
             return;
@@ -212,9 +212,9 @@ public class WishHistory {
     // MODIFIES: this
     // EFFECTS: initializes banner histories
     private void init() {
-        characterBannerHistory = new ArrayList<>();
-        weaponBannerHistory = new ArrayList<>();
-        standardBannerHistory = new ArrayList<>();
+        characterBannerHistory = new CharacterBanner();
+        weaponBannerHistory = new WeaponBanner();
+        standardBannerHistory = new StandardBanner();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }

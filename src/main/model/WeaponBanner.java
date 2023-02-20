@@ -3,11 +3,14 @@ package model;
 import java.util.List;
 
 public class WeaponBanner extends Banner {
+    private int fatePoints;
 
-    // REQUIRES: fiveStar.size() == 2, fourStar.size() == 5
-    public WeaponBanner(List<String> fiveStars, List<String> fourStars) {
-        super(fiveStars, fourStars);
+    public WeaponBanner() {
+        super();
 
     }
 
+    public int getFatePoints() {
+        return fatePoints;
+    }
 }

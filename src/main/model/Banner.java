@@ -49,7 +49,7 @@ public abstract class Banner {
     protected int getFiveStarPity() {
         int count = 0;
         for (int i = wishes.size() - 1; i >= 0; i--) {
-            if ((getRarity(wishes.get(i).getResult())) == 5) {
+            if ((findRarity(wishes.get(i).getResult())) == 5) {
                 return count;
             } else {
                 count++;
@@ -61,7 +61,7 @@ public abstract class Banner {
     protected int getFourStarPity() {
         for (int i = wishes.size() - 1; i >= 0; i--) {
             int count = 0;
-            if ((getRarity(wishes.get(i).getResult())) >= 4) {
+            if ((findRarity(wishes.get(i).getResult())) >= 4) {
                 return count;
             } else {
                 count++;
@@ -70,7 +70,7 @@ public abstract class Banner {
         return wishes.size();
     }
 
-    private int getRarity(String item) {
+    public int findRarity(String item) {
         if (FIVE_STARS.contains(item)) {
             return 5;
         } else if (FOUR_STARS.contains(item)) {

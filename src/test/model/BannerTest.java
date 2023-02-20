@@ -88,4 +88,12 @@ class BannerTest {
         assertFalse(b1.checkEmpty());
     }
 
+    @Test
+    public void testFindRarity() {
+        assertEquals(-1, b1.findRarity("Not An Item"));
+        assertEquals(3, b1.findRarity("Debate Club"));
+        assertEquals(4, b1.findRarity("Rainslasher"));
+        assertEquals(5, b1.findRarity("Tighnari"));
+    }
+
 }

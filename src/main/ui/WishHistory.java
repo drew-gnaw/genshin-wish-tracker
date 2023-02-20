@@ -182,31 +182,19 @@ public class WishHistory {
             String result = input.next();
             switch (banner) {
                 case "c":
-                    characterBannerHistory.addWish(new Wish(result, getRarity(result)));
+                    characterBannerHistory.addWish(new Wish(result, characterBannerHistory.findRarity("result")));
                     break;
                 case "w":
-                    weaponBannerHistory.addWish(new Wish(result, getRarity(result)));
+                    weaponBannerHistory.addWish(new Wish(result, weaponBannerHistory.findRarity("result")));
                     break;
                 case "s":
-                    standardBannerHistory.addWish(new Wish(result, getRarity(result)));
+                    standardBannerHistory.addWish(new Wish(result, standardBannerHistory.findRarity("result")));
             }
             System.out.println("Recorded Wish!");
             return;
         }
 
         System.out.println("Invalid Input!");
-    }
-
-    private int getRarity(String item) {
-        if (FIVE_STARS.contains(item)) {
-            return 5;
-        } else if (FOUR_STARS.contains(item)) {
-            return 4;
-        } else if (THREE_STARS.contains(item)) {
-            return 3;
-        } else {
-            return -1;
-        }
     }
 
     // MODIFIES: this

@@ -6,39 +6,10 @@ import java.util.*;
 
 // represents the wishing history on the three types of banners
 public class WishHistory {
-    private static final List<String> FIVE_STARS = new ArrayList<>(Arrays.asList(
-            "Albedo", "Alhaitham", "Aloy", "Ayaka", "Ayato", "Childe", "Cyno", "Dehya", "Diluc",
-            "Eula", "Ganyu", "Hu Tao", "Itto", "Jean", "Kazuha", "Keqing", "Klee", "Kokomi", "Mona",
-            "Nahida", "Nilou", "Qiqi", "Raiden Shogun", "Wanderer", "Shenhe", "Tighnari", "Venti",
-            "Xiao", "Yae Miko", "Yelan", "Yoimiya", "Zhongli", "A Thousand Floating Dreams",
-            "Amos' Bow", "Aqua Simulacra", "Aquila Favonia", "Beacon of the Reed Sea", "Calamity Queller",
-            "Elegy for the End", "Engulfing Lightning", "Everlasting Moonglow", "Freedom-Sworn",
-            "Haran Geppaku Futsu", "Hunter's Path", "Kagura's Verity", "Key of Khaj-Nisut",
-            "Light of Foliar Incision", "Lost Prayer to the Sacred Winds", "Memory of Dust",
-            "Mistsplitter Reforged", "Polar Star", "Primordial Jade Cutter", "Primordial Jade Winged-Spear",
-            "Redhorn Stonethresher", "Skyward Atlas", "Skyward Blade", "Skyward Harp", "Skyward Pride",
-            "Skyward Spine", "Song of Broken Pines", "Staff of Homa", "Staff of the Scarlet Sands",
-            "Summit Shaper", "The Unforged", "Thundering Pulse", "Tulaytullah's Remembrance",
-            "Vortex Vanquisher", "Wolf's Gravestone"));
 
-    private static final List<String> FOUR_STARS = new ArrayList<>(Arrays.asList(
-            "Faruzan", "Sayu", "Heizou", "Sucrose", "Chongyun", "Diona", "Kaeya", "Layla",
-            "Rosaria", "Collei", "Beidou", "Dori", "Fischl", "Sara", "Shinobu", "Lisa",
-            "Razor", "Gorou", "Ningguang", "Noelle", "Yun Jin", "Barbara", "Candace", "Xingqiu",
-            "Amber", "Bennett", "Thoma", "Xiangling", "Xinyan", "Yanfei",
-            "Favonius Warbow", "Rust", "Sacrificial Bow", "The Stringless", "Eye of Perception",
-            "Favonius Codex", "Sacrificial Fragments", "The Widsith", "Favonius Greatsword",
-            "Rainslasher", "Sacrificial Greatsword", "The Bell", "Dragon's Bane", "Favonius Lance",
-            "Favonius Sword", "Lion's Roar", "Sacrificial Sword", "The Flute"));
-
-    private static final List<String> THREE_STARS = new ArrayList<>(Arrays.asList(
-            "Black Tassel", "Bloodtainted Greatsword", "Cool Steel", "Debate Club", "Emerald Orb",
-            "Ferrous Shadow", "Harbinger of Dawn", "Magic Guide", "Raven Bow", "Sharpshooter's Oath",
-            "Skyrider Sword", "Slingshot", "Thrilling Tales of Dragon Slayers"));
-
-    private Banner standardBannerHistory;
-    private Banner characterBannerHistory;
-    private Banner weaponBannerHistory;
+    private StandardBanner standardBannerHistory;
+    private CharacterBanner characterBannerHistory;
+    private WeaponBanner weaponBannerHistory;
     private Scanner input;
 
     public WishHistory() {
@@ -85,7 +56,7 @@ public class WishHistory {
                 break;
             case "d": deleteWish();
                 break;
-            case "p": getprobabilities();
+            case "a": doAnalysis();
                 break;
             case "v": viewWishHistory();
                 break;
@@ -161,11 +132,62 @@ public class WishHistory {
         System.out.println("--------");
         for (Wish w : wishes) {
             System.out.println(count + ". " + w.getResult() + ", rarity: " + w.getRarity());
+            count++;
         }
         System.out.println("--------");
     }
 
-    private void getprobabilities() {
+    private void doAnalysis() {
+        System.out.println("\nWhich banner would you like to analyze?");
+        System.out.println("c -> Character Banner");
+        System.out.println("w -> Weapon Banner");
+        System.out.println("s -> Standard Banner");
+        String banner = input.next();
+
+        if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
+            switch (banner) {
+                case "c":
+                    doCharacterBannerAnalysis();
+                    break;
+                case "w":
+                    doWeaponBannerAnalysis();
+                    break;
+                case "s":
+                    doStandardBannerAnalysis();
+            }
+            return;
+        }
+        System.out.println("Invalid Input!");
+    }
+
+    private void doStandardBannerAnalysis() {
+        double fiveStarProbability;
+        if (standardBannerHistory.getFiveStarPity() <= 74) {
+            fiveStarProbability = 0.6;
+        } else if (standardBannerHistory.getFiveStarPity() == 89) {
+            fiveStarProbability = 100;
+        } else {
+            fiveStarProbability = 0.6 + (((standardBannerHistory.getFiveStarPity()) - 74) * 6);
+        }
+
+        double fourStarProbability;
+        if (standardBannerHistory.getFourStarPity() <= 8) {
+            fourStarProbability = 5.1;
+        } else {
+            fourStarProbability = 100;
+        }
+
+        System.out.println("The probability that you will pull a five-star item on your next wish is "
+                + fiveStarProbability
+                + "%, \nand the probability that you will pull a four-star or better item on your next wish is "
+                + fourStarProbability + "%.");
+    }
+
+    private void doWeaponBannerAnalysis() {
+    }
+
+    private void doCharacterBannerAnalysis() {
+
     }
 
     // MODIFIES: this
@@ -211,7 +233,7 @@ public class WishHistory {
         System.out.println("Please choose a command:");
         System.out.println("r -> record wish");
         System.out.println("d -> delete wish");
-        System.out.println("p -> get probabilities");
+        System.out.println("a -> conduct analysis");
         System.out.println("v -> view wish history");
         System.out.println("q -> quit");
     }

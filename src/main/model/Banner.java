@@ -36,17 +36,17 @@ public abstract class Banner {
             "Ferrous Shadow", "Harbinger of Dawn", "Magic Guide", "Raven Bow", "Sharpshooter's Oath",
             "Skyrider Sword", "Slingshot", "Thrilling Tales of Dragon Slayers"));
 
-    protected List<Wish> wishes = new ArrayList<>();
+    protected List<Wish> wishes;
 
     public Banner() {
-
+        wishes = new ArrayList<>();
     }
 
     public void addWish(Wish wish) {
         wishes.add(wish);
     }
 
-    protected int getFiveStarPity() {
+    public int getFiveStarPity() {
         int count = 0;
         for (int i = wishes.size() - 1; i >= 0; i--) {
             if ((findRarity(wishes.get(i).getResult())) == 5) {
@@ -58,7 +58,7 @@ public abstract class Banner {
         return wishes.size();
     }
 
-    protected int getFourStarPity() {
+    public int getFourStarPity() {
         for (int i = wishes.size() - 1; i >= 0; i--) {
             int count = 0;
             if ((findRarity(wishes.get(i).getResult())) >= 4) {

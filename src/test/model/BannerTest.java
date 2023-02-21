@@ -82,6 +82,61 @@ class BannerTest {
     }
 
     @Test
+    public void testCalculateFiveStarProbability() {
+        assertEquals(0.6, b1.calculateFiveStarProbability(90, 74, 0.6));
+        for (int i = 1; i <= 72; i++) {
+            b1.addWish(testWish3);
+        }
+        assertEquals(0.6, b1.calculateFiveStarProbability(90, 74, 0.6));
+        b1.addWish(testWish4);
+        assertEquals(6.6, b1.calculateFiveStarProbability(90, 74, 0.6));
+        b1.addWish(testWish3);
+        assertEquals(12.6, b1.calculateFiveStarProbability(90, 74, 0.6));
+        b1.addWish(testWish5);
+        assertEquals(0.6, b1.calculateFiveStarProbability(90, 74, 0.6));
+    }
+
+    @Test
+    public void testCalculateFiveStarProbabilityHardPity() {
+        for (int i = 1; i <= 89; i++) {
+            b3.addWish(testWish3);
+        }
+        assertEquals(100, b3.calculateFiveStarProbability(90, 74, 0.6));
+    }
+
+    @Test
+    public void testCalculateFiveStarProbabilityWeapon() {
+        for (int i = 1; i <= 61; i++) {
+            b2.addWish(testWish3);
+        }
+        assertEquals(0.7, b2.calculateFiveStarProbability(80, 63, 0.7));
+        b2.addWish(testWish3);
+        assertEquals(7.7, b2.calculateFiveStarProbability(80, 63, 0.7));
+    }
+
+    @Test
+    public void testCalculateFourStarProbability() {
+        for (int i = 1; i <= 8; i++) {
+            b1.addWish(testWish3);
+        }
+        assertEquals(5.1, b1.calculateFourStarProbability(5.1));
+        b1.addWish(testWish3);
+        assertEquals(100, b1.calculateFourStarProbability(5.1));
+    }
+
+    @Test
+    public void testCalculateFourStarProbabilityWeapon() {
+        for (int i = 1; i <= 8; i++) {
+            b2.addWish(testWish3);
+        }
+        assertEquals(6, b2.calculateFourStarProbability(6));
+        b2.addWish(testWish3);
+        assertEquals(100, b2.calculateFourStarProbability(6));
+        b2.addWish(testWish4);
+        assertEquals(6, b2.calculateFourStarProbability(6));
+    }
+
+    @Test
     public void testCheckEmpty() {
         assertTrue(b1.checkEmpty());
         b1.addWish(testWish5);

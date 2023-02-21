@@ -68,8 +68,8 @@ public class WishHistory {
 
     // EFFECTS: deletes the most recent wish on a banner
     private void deleteWish() {
-        System.out.println("\nWhich banner would you like to delete a wish from?\nc -> Character Banner");
-        System.out.println("w -> Weapon Banner\ns -> Standard Banner");
+        System.out.println("\nWhich banner would you like to delete a wish from?");
+        printBannerOptions();
         String banner = input.next();
         if (banner.equals("c")) {
             if (checkIfEmpty(characterBannerHistory.getWishes())) {
@@ -104,9 +104,7 @@ public class WishHistory {
     // EFFECTS: displays the wishing history for a chosen banner
     private void viewWishHistory() {
         System.out.println("\nWhich banner's history would you like to view?");
-        System.out.println("c -> Character Banner");
-        System.out.println("w -> Weapon Banner");
-        System.out.println("s -> Standard Banner");
+        printBannerOptions();
         String banner = input.next();
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             switch (banner) {
@@ -131,7 +129,7 @@ public class WishHistory {
         List<Wish> wishes = banner.getWishes();
         System.out.println("--------");
         for (Wish w : wishes) {
-            System.out.println(count + ". " + w.getResult() + ", rarity: " + w.getRarity());
+            System.out.println(count + ". " + w.getResult() + ", rarity: " + banner.findRarity(w.getResult()));
             count++;
         }
         System.out.println("--------");
@@ -139,9 +137,7 @@ public class WishHistory {
 
     private void doAnalysis() {
         System.out.println("\nWhich banner would you like to analyze?");
-        System.out.println("c -> Character Banner");
-        System.out.println("w -> Weapon Banner");
-        System.out.println("s -> Standard Banner");
+        printBannerOptions();
         String banner = input.next();
 
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
@@ -161,42 +157,39 @@ public class WishHistory {
     }
 
     private void doStandardBannerAnalysis() {
-        double fiveStarProbability;
-        if (standardBannerHistory.getFiveStarPity() <= 74) {
-            fiveStarProbability = 0.6;
-        } else if (standardBannerHistory.getFiveStarPity() == 89) {
-            fiveStarProbability = 100;
-        } else {
-            fiveStarProbability = 0.6 + (((standardBannerHistory.getFiveStarPity()) - 74) * 6);
-        }
-
-        double fourStarProbability;
-        if (standardBannerHistory.getFourStarPity() <= 8) {
-            fourStarProbability = 5.1;
-        } else {
-            fourStarProbability = 100;
-        }
-
+        System.out.println("You currently have " + standardBannerHistory.getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
-                + fiveStarProbability
-                + "%, \nand the probability that you will pull a four-star or better item on your next wish is "
-                + fourStarProbability + "%.");
+                + standardBannerHistory.calculateFiveStarProbability(90, 74, 0.6)
+                + "%...");
+        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
+                + standardBannerHistory.calculateFourStarProbability(5.1) + "%.");
     }
 
     private void doWeaponBannerAnalysis() {
+        System.out.println("You currently have " + weaponBannerHistory.getFiveStarPity() + " pity.");
+        System.out.println("The probability that you will pull a five-star item on your next wish is "
+                + standardBannerHistory.calculateFiveStarProbability(80, 63, 0.7)
+                + "%...");
+        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
+                + weaponBannerHistory.calculateFourStarProbability(6) + "%.");
+        System.out.println("You have " + weaponBannerHistory.getFatePoints() + " Fate points.");
     }
 
     private void doCharacterBannerAnalysis() {
-
+        System.out.println("You currently have " + characterBannerHistory.getFiveStarPity() + " pity.");
+        System.out.println("The probability that you will pull a five-star item on your next wish is "
+                + standardBannerHistory.calculateFiveStarProbability(90, 74, 0.6)
+                + "%...");
+        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
+                + characterBannerHistory.calculateFourStarProbability(5.1) + "%.");
     }
+
 
     // MODIFIES: this
     // EFFECTS: adds a wish to the appropriate banner
     private void recordWish() {
         System.out.println("\nPlease choose the banner the wish was done on");
-        System.out.println("c -> Character Banner");
-        System.out.println("w -> Weapon Banner");
-        System.out.println("s -> Standard Banner");
+        printBannerOptions();
         String banner = input.next();
 
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
@@ -204,19 +197,44 @@ public class WishHistory {
             String result = input.next();
             switch (banner) {
                 case "c":
-                    characterBannerHistory.addWish(new Wish(result, characterBannerHistory.findRarity("result")));
+                    characterBannerHistory.addWish(new Wish(result, characterBannerHistory.findRarity(result)));
                     break;
                 case "w":
-                    weaponBannerHistory.addWish(new Wish(result, weaponBannerHistory.findRarity("result")));
+                    weaponBannerHistory.addWish(new Wish(result, weaponBannerHistory.findRarity(result)));
+                    if ((weaponBannerHistory.findRarity(result)) == 5) {
+                        checkFatePoint();
+                    }
                     break;
                 case "s":
-                    standardBannerHistory.addWish(new Wish(result, standardBannerHistory.findRarity("result")));
+                    standardBannerHistory.addWish(new Wish(result, standardBannerHistory.findRarity(result)));
             }
             System.out.println("Recorded Wish!");
             return;
         }
-
         System.out.println("Invalid Input!");
+    }
+
+    private void printBannerOptions() {
+        System.out.println("c -> Character Banner");
+        System.out.println("w -> Weapon Banner");
+        System.out.println("s -> Standard Banner");
+    }
+
+    private void checkFatePoint() {
+        System.out.println("Was this five-star weapon the one on your epitomized path? (y/n)");
+        boolean running = true;
+        while (running) {
+            String epitomized = input.next();
+            if (epitomized.equals("y")) {
+                weaponBannerHistory.resetFatePoints();
+                running = false;
+            } else if (epitomized.equals("n")) {
+                weaponBannerHistory.addFatePoint();
+                running = false;
+            } else {
+                System.out.println("Please enter y or n.");
+            }
+        }
     }
 
     // MODIFIES: this

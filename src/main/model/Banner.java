@@ -70,6 +70,28 @@ public abstract class Banner {
         return wishes.size();
     }
 
+    public double calculateFiveStarProbability(int hardPity, int softPity, double base) {
+        double fiveStarProbability;
+        if (getFiveStarPity() <= (softPity - 2)) {
+            fiveStarProbability = base;
+        } else if (getFiveStarPity() == (hardPity - 1)) {
+            fiveStarProbability = 100;
+        } else {
+            fiveStarProbability = base + (((getFiveStarPity()) - (softPity - 2)) * base * 10);
+        }
+        return fiveStarProbability;
+    }
+
+    public double calculateFourStarProbability(double base) {
+        double fourStarProbability;
+        if (getFourStarPity() <= 8) {
+            fourStarProbability = base;
+        } else {
+            fourStarProbability = 100;
+        }
+        return fourStarProbability;
+    }
+
     public int findRarity(String item) {
         if (FIVE_STARS.contains(item)) {
             return 5;

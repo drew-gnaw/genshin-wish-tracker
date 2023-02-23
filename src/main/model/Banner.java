@@ -38,14 +38,18 @@ public abstract class Banner {
 
     protected List<Wish> wishes;
 
+    //EFFECTS: constructs a new Banner with no wishes
     public Banner() {
         wishes = new ArrayList<>();
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds a wish to the end of the wishing history
     public void addWish(Wish wish) {
         wishes.add(wish);
     }
 
+    //EFFECTS: gets the amount of wishes since the last five star
     public int getFiveStarPity() {
         int count = 0;
         for (int i = wishes.size() - 1; i >= 0; i--) {
@@ -58,6 +62,7 @@ public abstract class Banner {
         return wishes.size();
     }
 
+    //EFFECTS: gets the amount of wishes since the last four star
     public int getFourStarPity() {
         for (int i = wishes.size() - 1; i >= 0; i--) {
             int count = 0;
@@ -70,6 +75,7 @@ public abstract class Banner {
         return wishes.size();
     }
 
+    //EFFECTS: calculates the probability that the next pull is a five star
     public double calculateFiveStarProbability(int hardPity, int softPity, double base) {
         double fiveStarProbability;
         if (getFiveStarPity() <= (softPity - 2)) {
@@ -82,6 +88,7 @@ public abstract class Banner {
         return fiveStarProbability;
     }
 
+    //EFFECTS: calculates the probability that the next pull is a four star
     public double calculateFourStarProbability(double base) {
         double fourStarProbability;
         if (getFourStarPity() <= 8) {
@@ -92,6 +99,7 @@ public abstract class Banner {
         return fourStarProbability;
     }
 
+    //EFFECTS: finds the rarity of an item
     public int findRarity(String item) {
         if (FIVE_STARS.contains(item)) {
             return 5;
@@ -104,14 +112,17 @@ public abstract class Banner {
         }
     }
 
+    //EFFECTS: gets the total number of wishes done on a banner
     public int getSize() {
         return wishes.size();
     }
 
+    //EFFECTS: checks if no wishes have been done
     public boolean checkEmpty() {
         return (wishes.size() == 0);
     }
 
+    //EFFECTS: returns the wishing history
     public List<Wish> getWishes() {
         return wishes;
     }

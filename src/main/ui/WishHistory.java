@@ -12,22 +12,13 @@ public class WishHistory {
     private WeaponBanner weaponBannerHistory;
     private Scanner input;
 
+    // EFFECTS: runs the wish tracker
     public WishHistory() {
         runWishTracker();
     }
 
-    public List<Wish> getStandardBannerHistory() {
-        return standardBannerHistory.getWishes();
-    }
-
-    public List<Wish> getCharacterBannerHistory() {
-        return characterBannerHistory.getWishes();
-    }
-
-    public List<Wish> getWeaponBannerHistory() {
-        return weaponBannerHistory.getWishes();
-    }
-
+    // MODIFIES: this
+    // EFFECTS: allows user to give input
     private void runWishTracker() {
         boolean running = true;
         String cmd;
@@ -50,6 +41,8 @@ public class WishHistory {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes a command
     private void processCommand(String cmd) {
         switch (cmd) {
             case "r": recordWish();
@@ -63,9 +56,9 @@ public class WishHistory {
             default:
                 System.out.println("Invalid Input!");
         }
-
     }
 
+    // MODIFIES: this
     // EFFECTS: deletes the most recent wish on a banner
     private void deleteWish() {
         System.out.println("\nWhich banner would you like to delete a wish from?");
@@ -93,10 +86,11 @@ public class WishHistory {
         System.out.println("Removed the latest wish!");
     }
 
+
     // EFFECTS: checks whether the given list is empty and produces appropriate response
     private boolean checkIfEmpty(List<Wish> wishes) {
         if (wishes.size() == 0) {
-            System.out.printf("No Wishes to remove!\n");
+            System.out.println("No Wishes to remove!\n");
         }
         return (wishes.size() == 0);
     }
@@ -135,6 +129,7 @@ public class WishHistory {
         System.out.println("--------");
     }
 
+    // EFFECTS: analyzes the probabilities on a banner
     private void doAnalysis() {
         System.out.println("\nWhich banner would you like to analyze?");
         printBannerOptions();
@@ -156,6 +151,7 @@ public class WishHistory {
         System.out.println("Invalid Input!");
     }
 
+    // EFFECTS: analyzes the standard banner wishing history
     private void doStandardBannerAnalysis() {
         System.out.println("You currently have " + standardBannerHistory.getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
@@ -165,6 +161,7 @@ public class WishHistory {
                 + standardBannerHistory.calculateFourStarProbability(5.1) + "%.");
     }
 
+    // EFFECTS: analyzes the weapon banner wishing history
     private void doWeaponBannerAnalysis() {
         System.out.println("You currently have " + weaponBannerHistory.getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
@@ -175,6 +172,7 @@ public class WishHistory {
         System.out.println("You have " + weaponBannerHistory.getFatePoints() + " Fate points.");
     }
 
+    // EFFECTS: analyzes the character banner wishing history
     private void doCharacterBannerAnalysis() {
         System.out.println("You currently have " + characterBannerHistory.getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
@@ -214,12 +212,15 @@ public class WishHistory {
         System.out.println("Invalid Input!");
     }
 
+    // EFFECTS: shows banner options to user
     private void printBannerOptions() {
         System.out.println("c -> Character Banner");
         System.out.println("w -> Weapon Banner");
         System.out.println("s -> Standard Banner");
     }
 
+    // MODIFIES: this
+    // EFFECTS: adjusts fate points on the weapon banner according to user input
     private void checkFatePoint() {
         System.out.println("Was this five-star weapon the one on your epitomized path? (y/n)");
         boolean running = true;
@@ -247,6 +248,7 @@ public class WishHistory {
         input.useDelimiter("\n");
     }
 
+    // EFFECTS: shows main menu options to user
     private void displayMenu() {
         System.out.println("Please choose a command:");
         System.out.println("r -> record wish");

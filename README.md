@@ -34,10 +34,15 @@ means, the vast majority must be **wished** for.
 - As a user, I want to be able to add a wish to my wish history
 - As a user, I want to be able to view my wish history
 - As a user, I want to be able to see the probability that I will
-obtain a given item in my next wish
+obtain a rare item in my next wish
 - As a user, I want to be able to remove a wish from my wish history
 in case it was wrongly inputted
 - As a user, I want to be able to see how close I am to "pity"
 - As a user, I want to be able to see if I am guaranteed to win
 the "50/50"
 - As a user, I want to be able to see how many "fate points" I have
+
+## Attributes
+
+The code used for displaying the main menu UI was adapted from the 
+TellerApp project example.

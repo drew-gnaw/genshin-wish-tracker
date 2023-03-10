@@ -5,15 +5,27 @@ import model.*;
 import java.util.*;
 
 // represents the wishing history on the three types of banners
-public class WishHistory {
+public class WishHistoryApp {
 
     private StandardBanner standardBannerHistory;
     private CharacterBanner characterBannerHistory;
     private WeaponBanner weaponBannerHistory;
     private Scanner input;
 
+    public StandardBanner getStandardBannerHistory() {
+        return standardBannerHistory;
+    }
+
+    public CharacterBanner getCharacterBannerHistory() {
+        return characterBannerHistory;
+    }
+
+    public WeaponBanner getWeaponBannerHistory() {
+        return weaponBannerHistory;
+    }
+
     // EFFECTS: runs the wish tracker
-    public WishHistory() {
+    public WishHistoryApp() {
         runWishTracker();
     }
 

@@ -1,0 +1,28 @@
+{
+  "standard": [
+    {
+      "result": "Debate Club",
+      "rarity": 3
+    }
+  ],
+  "character": [
+    {
+      "result": "Sacrificial Sword",
+      "rarity": 4
+    },
+    {
+      "result": "Diluc",
+      "rarity": 5
+    }
+  ],
+  "weapon": [
+    {
+      "result": "Skyrider Sword",
+      "rarity": 3
+    },
+    {
+      "result": "Aquila Favonia",
+      "rarity": 5
+    }
+  ]
+}

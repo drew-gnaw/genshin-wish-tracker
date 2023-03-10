@@ -41,6 +41,9 @@ in case it was wrongly inputted
 - As a user, I want to be able to see if I am guaranteed to win
 the "50/50"
 - As a user, I want to be able to see how many "fate points" I have
+- As a user, I want to save my wishing history on all three banners to a file
+- As a user, I want to be able to load a file containing 
+information on my wishing history
 
 ## Attributes
 

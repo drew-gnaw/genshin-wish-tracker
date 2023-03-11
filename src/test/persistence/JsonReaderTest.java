@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// This test class was adapted from the JsonSerializationDemo project
 class JsonReaderTest extends JsonTest {
 
     @Test
@@ -26,9 +27,9 @@ class JsonReaderTest extends JsonTest {
         JsonReader reader = new JsonReader("./data/testReaderEmptyWishHistory.json");
         try {
             WishHistory wh = reader.read();
-            assertEquals(true, wh.getStandardBannerHistory().checkEmpty());
-            assertEquals(true, wh.getCharacterBannerHistory().checkEmpty());
-            assertEquals(true, wh.getWeaponBannerHistory().checkEmpty());
+            assertTrue(wh.getStandardBannerHistory().checkEmpty());
+            assertTrue(wh.getCharacterBannerHistory().checkEmpty());
+            assertTrue(wh.getWeaponBannerHistory().checkEmpty());
         } catch (IOException e) {
             fail("Couldn't read from file");
         }

@@ -49,3 +49,6 @@ information on my wishing history
 
 The code used for displaying the main menu UI was adapted from the 
 TellerApp project example.
+
+The code used for the JsonReader and JsonWriter as well as their respective test
+classes was adapted from the JsonSerializationDemo project. 

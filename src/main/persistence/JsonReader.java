@@ -75,6 +75,8 @@ public class JsonReader {
             case "weapon":
                 wh.getWeaponBannerHistory().addWish(wish);
                 break;
+            default:
+                break;
         }
 
     }

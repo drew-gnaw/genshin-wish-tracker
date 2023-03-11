@@ -7,21 +7,19 @@ import java.util.*;
 // represents the wishing history on the three types of banners
 public class WishHistoryApp {
 
-    private StandardBanner standardBannerHistory;
-    private CharacterBanner characterBannerHistory;
-    private WeaponBanner weaponBannerHistory;
+    private ui.WishHistory wishHistory;
     private Scanner input;
 
     public StandardBanner getStandardBannerHistory() {
-        return standardBannerHistory;
+        return wishHistory.getStandardBannerHistory();
     }
 
     public CharacterBanner getCharacterBannerHistory() {
-        return characterBannerHistory;
+        return wishHistory.getCharacterBannerHistory();
     }
 
     public WeaponBanner getWeaponBannerHistory() {
-        return weaponBannerHistory;
+        return wishHistory.getWeaponBannerHistory();
     }
 
     // EFFECTS: runs the wish tracker
@@ -77,20 +75,20 @@ public class WishHistoryApp {
         printBannerOptions();
         String banner = input.next();
         if (banner.equals("c")) {
-            if (checkIfEmpty(characterBannerHistory.getWishes())) {
+            if (checkIfEmpty(wishHistory.getCharacterBannerHistory().getWishes())) {
                 return;
             }
-            characterBannerHistory.getWishes().remove(characterBannerHistory.getSize() - 1);
+            removeWish("character");
         } else if (banner.equals("w")) {
-            if (weaponBannerHistory.checkEmpty()) {
+            if (wishHistory.getWeaponBannerHistory().checkEmpty()) {
                 return;
             }
-            weaponBannerHistory.getWishes().remove(weaponBannerHistory.getSize() - 1);
+            removeWish("weapon");
         } else if (banner.equals("s")) {
-            if (standardBannerHistory.checkEmpty()) {
+            if (wishHistory.getStandardBannerHistory().checkEmpty()) {
                 return;
             }
-            standardBannerHistory.getWishes().remove(standardBannerHistory.getSize() - 1);
+            removeWish("standard");
         } else {
             System.out.println("Invalid Input!");
             return;
@@ -98,6 +96,18 @@ public class WishHistoryApp {
         System.out.println("Removed the latest wish!");
     }
 
+    private void removeWish(String banner) {
+        if (banner.equals("character")) {
+            wishHistory.getCharacterBannerHistory().getWishes()
+                    .remove(wishHistory.getCharacterBannerHistory().getSize() - 1);
+        } else if (banner.equals("weapon")) {
+            wishHistory.getWeaponBannerHistory().getWishes()
+                    .remove(wishHistory.getWeaponBannerHistory().getSize() - 1);
+        } else if (banner.equals("standard")) {
+            wishHistory.getStandardBannerHistory().getWishes()
+                    .remove(wishHistory.getStandardBannerHistory().getSize() - 1);
+        }
+    }
 
     // EFFECTS: checks whether the given list is empty and produces appropriate response
     private boolean checkIfEmpty(List<Wish> wishes) {
@@ -115,13 +125,13 @@ public class WishHistoryApp {
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             switch (banner) {
                 case "c":
-                    printWishes(characterBannerHistory);
+                    printWishes(wishHistory.getCharacterBannerHistory());
                     break;
                 case "w":
-                    printWishes(weaponBannerHistory);
+                    printWishes(wishHistory.getWeaponBannerHistory());
                     break;
                 case "s":
-                    printWishes(standardBannerHistory);
+                    printWishes(wishHistory.getStandardBannerHistory());
             }
             return;
         }
@@ -165,33 +175,34 @@ public class WishHistoryApp {
 
     // EFFECTS: analyzes the standard banner wishing history
     private void doStandardBannerAnalysis() {
-        System.out.println("You currently have " + standardBannerHistory.getFiveStarPity() + " pity.");
+        System.out.println("You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
-                + standardBannerHistory.calculateFiveStarProbability(90, 74, 0.6)
+                + wishHistory.getStandardBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
                 + "%...");
         System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + standardBannerHistory.calculateFourStarProbability(5.1) + "%.");
+                + wishHistory.getStandardBannerHistory().calculateFourStarProbability(5.1) + "%.");
     }
 
     // EFFECTS: analyzes the weapon banner wishing history
     private void doWeaponBannerAnalysis() {
-        System.out.println("You currently have " + weaponBannerHistory.getFiveStarPity() + " pity.");
+        System.out.println("You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
-                + standardBannerHistory.calculateFiveStarProbability(80, 63, 0.7)
+                + wishHistory.getWeaponBannerHistory().calculateFiveStarProbability(80, 63, 0.7)
                 + "%...");
         System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + weaponBannerHistory.calculateFourStarProbability(6) + "%.");
-        System.out.println("You have " + weaponBannerHistory.getFatePoints() + " Fate points.");
+                + wishHistory.getWeaponBannerHistory().calculateFourStarProbability(6) + "%.");
+        System.out.println("You have " + wishHistory.getWeaponBannerHistory().getFatePoints() + " Fate points.");
     }
 
     // EFFECTS: analyzes the character banner wishing history
     private void doCharacterBannerAnalysis() {
-        System.out.println("You currently have " + characterBannerHistory.getFiveStarPity() + " pity.");
+        System.out.println("You currently have " + wishHistory
+                .getCharacterBannerHistory().getFiveStarPity() + " pity.");
         System.out.println("The probability that you will pull a five-star item on your next wish is "
-                + standardBannerHistory.calculateFiveStarProbability(90, 74, 0.6)
+                + wishHistory.getCharacterBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
                 + "%...");
         System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + characterBannerHistory.calculateFourStarProbability(5.1) + "%.");
+                + wishHistory.getCharacterBannerHistory().calculateFourStarProbability(5.1) + "%.");
     }
 
 
@@ -201,27 +212,35 @@ public class WishHistoryApp {
         System.out.println("\nPlease choose the banner the wish was done on");
         printBannerOptions();
         String banner = input.next();
-
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             System.out.println("\nPlease enter the character or weapon you obtained");
             String result = input.next();
-            switch (banner) {
-                case "c":
-                    characterBannerHistory.addWish(new Wish(result, characterBannerHistory.findRarity(result)));
-                    break;
-                case "w":
-                    weaponBannerHistory.addWish(new Wish(result, weaponBannerHistory.findRarity(result)));
-                    if ((weaponBannerHistory.findRarity(result)) == 5) {
-                        checkFatePoint();
-                    }
-                    break;
-                case "s":
-                    standardBannerHistory.addWish(new Wish(result, standardBannerHistory.findRarity(result)));
-            }
+            recordWish(banner, result);
             System.out.println("Recorded Wish!");
             return;
         }
         System.out.println("Invalid Input!");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds wish to appropriate banner and checks fate points
+    private void recordWish(String banner, String result) {
+        switch (banner) {
+            case "c":
+                wishHistory.getCharacterBannerHistory().addWish(new Wish(result, wishHistory
+                        .getCharacterBannerHistory().findRarity(result)));
+                break;
+            case "w":
+                wishHistory.getWeaponBannerHistory().addWish(new Wish(result, wishHistory
+                        .getWeaponBannerHistory().findRarity(result)));
+                if ((wishHistory.getWeaponBannerHistory().findRarity(result)) == 5) {
+                    checkFatePoint();
+                }
+                break;
+            case "s":
+                wishHistory.getStandardBannerHistory().addWish(new Wish(result, wishHistory
+                        .getStandardBannerHistory().findRarity(result)));
+        }
     }
 
     // EFFECTS: shows banner options to user
@@ -239,10 +258,10 @@ public class WishHistoryApp {
         while (running) {
             String epitomized = input.next();
             if (epitomized.equals("y")) {
-                weaponBannerHistory.resetFatePoints();
+                wishHistory.getWeaponBannerHistory().resetFatePoints();
                 running = false;
             } else if (epitomized.equals("n")) {
-                weaponBannerHistory.addFatePoint();
+                wishHistory.getWeaponBannerHistory().addFatePoint();
                 running = false;
             } else {
                 System.out.println("Please enter y or n.");
@@ -253,9 +272,7 @@ public class WishHistoryApp {
     // MODIFIES: this
     // EFFECTS: initializes banner histories
     private void init() {
-        characterBannerHistory = new CharacterBanner();
-        weaponBannerHistory = new WeaponBanner();
-        standardBannerHistory = new StandardBanner();
+        wishHistory = new ui.WishHistory();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }

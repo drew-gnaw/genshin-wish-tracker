@@ -1,14 +1,21 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 // represents the wishing history on the three types of banners
 public class WishHistoryApp {
 
-    private ui.WishHistory wishHistory;
+    private static final String JSON_STORE = "./data/wishHistory.json";
+    private WishHistory wishHistory;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     public StandardBanner getStandardBannerHistory() {
         return wishHistory.getStandardBannerHistory();
@@ -24,6 +31,8 @@ public class WishHistoryApp {
 
     // EFFECTS: runs the wish tracker
     public WishHistoryApp() {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runWishTracker();
     }
 
@@ -63,8 +72,35 @@ public class WishHistoryApp {
                 break;
             case "v": viewWishHistory();
                 break;
+            case "s": saveWishHistory();
+                break;
+            case "l": loadWishHistory();
+                break;
             default:
                 System.out.println("Invalid Input!");
+        }
+    }
+
+    // EFFECTS: saves the wish history to file
+    private void saveWishHistory() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(wishHistory);
+            jsonWriter.close();
+            System.out.println("Saved current wishing history to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads wish history from file
+    private void loadWishHistory() {
+        try {
+            wishHistory = jsonReader.read();
+            System.out.println("Loaded wishing history from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 
@@ -272,7 +308,7 @@ public class WishHistoryApp {
     // MODIFIES: this
     // EFFECTS: initializes banner histories
     private void init() {
-        wishHistory = new ui.WishHistory();
+        wishHistory = new WishHistory();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -284,6 +320,8 @@ public class WishHistoryApp {
         System.out.println("d -> delete wish");
         System.out.println("a -> conduct analysis");
         System.out.println("v -> view wish history");
+        System.out.println("s -> save wish history to file");
+        System.out.println("l -> load wish history from file");
         System.out.println("q -> quit");
     }
 

@@ -1,8 +1,8 @@
 package persistence;
 
 import org.junit.jupiter.api.Test;
-import ui.WishHistory;
-import ui.WishHistoryApp;
+import model.WishHistory;
+
 
 import java.io.IOException;
 

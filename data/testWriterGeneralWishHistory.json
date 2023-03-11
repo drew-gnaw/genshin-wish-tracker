@@ -1,0 +1,11 @@
+{
+    "standard": [],
+    "weapon": [{
+        "result": "Rainslasher",
+        "rarity": 4
+    }],
+    "character": [{
+        "result": "Debate Club",
+        "rarity": 3
+    }]
+}

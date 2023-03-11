@@ -1,7 +1,10 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // represents a single wish with its result and the rarity of the result
-public class Wish {
+public class Wish implements Writable {
     //private Banner banner;
     private String result;
     private int rarity;
@@ -20,5 +23,13 @@ public class Wish {
     //EFFECTS: returns the rarity of the item
     public int getRarity() {
         return rarity;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("result", result);
+        json.put("rarity", rarity);
+        return json;
     }
 }

@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 
 import model.Wish;
 import org.json.*;
-import ui.WishHistory;
-import ui.WishHistoryApp;
+import model.WishHistory;
+
 
 import static java.lang.Integer.valueOf;
 

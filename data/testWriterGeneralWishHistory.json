@@ -1,5 +1,8 @@
 {
-    "standard": [],
+    "standard": [{
+        "result": "Qiqi",
+        "rarity": 5
+    }],
     "weapon": [{
         "result": "Rainslasher",
         "rarity": 4

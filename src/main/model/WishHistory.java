@@ -42,7 +42,7 @@ public class WishHistory implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns wishes on the standard banner as a JSON array
     private JSONArray standardWishesToJson() {
         JSONArray jsonArray = new JSONArray();
 
@@ -53,7 +53,7 @@ public class WishHistory implements Writable {
         return jsonArray;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns wishes on the character banner as a JSON array
     private JSONArray characterWishesToJson() {
         JSONArray jsonArray = new JSONArray();
 
@@ -64,7 +64,7 @@ public class WishHistory implements Writable {
         return jsonArray;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns wishes on the weapon banner as a JSON array
     private JSONArray weaponWishesToJson() {
         JSONArray jsonArray = new JSONArray();
 

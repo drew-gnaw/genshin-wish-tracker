@@ -11,7 +11,6 @@ import org.json.*;
 import model.WishHistory;
 
 
-import static java.lang.Integer.valueOf;
 
 // Represents a reader that reads wishing history from JSON data stored in file
 public class JsonReader {

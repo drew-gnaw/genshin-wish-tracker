@@ -53,6 +53,7 @@ class JsonWriterTest extends JsonTest {
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralWishHistory.json");
             wh.getCharacterBannerHistory().addWish(new Wish("Debate Club", 3));
             wh.getWeaponBannerHistory().addWish(new Wish("Rainslasher", 4));
+            wh.getStandardBannerHistory().addWish(new Wish("Qiqi", 5));
             writer.open();
             writer.write(wh);
             writer.close();
@@ -61,7 +62,7 @@ class JsonWriterTest extends JsonTest {
             wh = reader.read();
             checkWish("Debate Club", 3, wh.getCharacterBannerHistory().getWishes().get(0));
             checkWish("Rainslasher", 4, wh.getWeaponBannerHistory().getWishes().get(0));
-            assertEquals(0, wh.getStandardBannerHistory().getWishes().size());
+            checkWish("Qiqi", 5, wh.getStandardBannerHistory().getWishes().get(0));
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }

@@ -1,8 +1,14 @@
 {
     "standard": [],
     "weapon": [],
-    "character": [{
-        "result": "Debate Club",
-        "rarity": 3
-    }]
+    "character": [
+        {
+            "result": "Debate Club",
+            "rarity": 3
+        },
+        {
+            "result": "Skyrider Sword",
+            "rarity": 3
+        }
+    ]
 }

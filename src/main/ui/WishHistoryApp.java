@@ -34,7 +34,11 @@ public class WishHistoryApp extends JFrame {
     private JButton standardButton;
     private JButton weaponButton;
     private JButton characterButton;
+    private JTextField textField;
+    private JTextArea historyArea;
+    private JTextArea analysisArea;
     private JLabel currentBanner;
+    private JScrollPane scroll;
 
     public StandardBanner getStandardBannerHistory() {
         return wishHistory.getStandardBannerHistory();
@@ -54,6 +58,7 @@ public class WishHistoryApp extends JFrame {
         initializeGraphics();
         initializeActionButtons();
         initializeBannerButtons();
+        initializeTextArea();
         setVisible(true);
         runWishTracker();
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -64,13 +69,18 @@ public class WishHistoryApp extends JFrame {
 
     private void initializeActionButtons() {
         buttonPanel = new JPanel();
-        recordButton = new JButton("Record");
+        initializeRecordButton();
+        textField = new JTextField();
         deleteButton = new JButton("Delete");
+        handleDeleteButton();
         viewButton = new JButton("View History");
+        handleViewButton();
         analyzeButton = new JButton("Analyze");
+        handleAnalyzeButton();
 
         buttonPanel.setLayout(new GridLayout(0, 1));
         buttonPanel.add(recordButton);
+        buttonPanel.add(textField);
         buttonPanel.add(deleteButton);
         buttonPanel.add(viewButton);
         buttonPanel.add(analyzeButton);
@@ -104,6 +114,114 @@ public class WishHistoryApp extends JFrame {
 
     private void updateCurrentBanner() {
         currentBanner.setText(activeBanner);
+    }
+
+    private void initializeRecordButton() {
+        recordButton = new JButton("Record");
+        recordButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                handleRecordWish();
+            }
+        });
+    }
+
+    private void handleAnalyzeButton() {
+        analyzeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                switch (activeBanner) {
+                    case "Standard":
+                        analysisArea.setText(doStandardBannerAnalysis());
+                        break;
+                    case "Weapon":
+                        analysisArea.setText(doWeaponBannerAnalysis());
+                        break;
+                    case "Character":
+                        analysisArea.setText(doCharacterBannerAnalysis());
+                        break;
+                }
+            }
+        });
+    }
+
+    private void handleRecordWish() {
+        switch (activeBanner) {
+            case "Standard":
+                recordWish("s", textField.getText());
+                break;
+            case "Weapon":
+                wishHistory.getWeaponBannerHistory().addWish(new Wish(textField.getText(), wishHistory
+                        .getWeaponBannerHistory().findRarity(textField.getText())));
+                break;
+            case "Character":
+                recordWish("c", textField.getText());
+                break;
+        }
+    }
+
+    private void handleDeleteButton() {
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                switch (activeBanner) {
+                    case "Standard":
+                        if (!(wishHistory.getStandardBannerHistory().getWishes().size() == 0)) {
+                            removeWish(activeBanner.toLowerCase());
+                        }
+                    case "Weapon":
+                        if (!(wishHistory.getWeaponBannerHistory().getWishes().size() == 0)) {
+                            removeWish(activeBanner.toLowerCase());
+                        }
+                    case "Character":
+                        if (!(wishHistory.getCharacterBannerHistory().getWishes().size() == 0)) {
+                            removeWish(activeBanner.toLowerCase());
+                        }
+                }
+
+            }
+        });
+    }
+
+    private void handleViewButton() {
+        viewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                historyArea.setText(null);
+                int count = 1;
+                switch (activeBanner) {
+                    case "Standard":
+                        for (Wish w : wishHistory.getStandardBannerHistory().getWishes()) {
+                            addToHistoryArea(count, w);
+                            count++;
+                        }
+                    case "Weapon":
+                        for (Wish w : wishHistory.getWeaponBannerHistory().getWishes()) {
+                            addToHistoryArea(count, w);
+                            count++;
+                        }
+                    case "Character":
+                        for (Wish w : wishHistory.getCharacterBannerHistory().getWishes()) {
+                            addToHistoryArea(count, w);
+                            count++;
+                        }
+                }
+            }
+        });
+    }
+
+    private void addToHistoryArea(int count, Wish w) {
+        historyArea.append(count + ". " + w.getResult() + ", Rarity: " + w.getRarity() + "\n");
+    }
+
+    private void initializeTextArea() {
+        historyArea = new JTextArea(30, 20);
+        historyArea.setEditable(false);
+        scroll = new JScrollPane(historyArea);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setLayout(new ScrollPaneLayout());
+        add(scroll, BorderLayout.WEST);
+
+        analysisArea = new JTextArea(20, 20);
+        analysisArea.setEditable(false);
+        add(analysisArea, BorderLayout.CENTER);
+
     }
 
     private void initializeStandardButton() {
@@ -296,13 +414,13 @@ public class WishHistoryApp extends JFrame {
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             switch (banner) {
                 case "c":
-                    doCharacterBannerAnalysis();
+                    System.out.println(doCharacterBannerAnalysis());
                     break;
                 case "w":
-                    doWeaponBannerAnalysis();
+                    System.out.println(doWeaponBannerAnalysis());
                     break;
                 case "s":
-                    doStandardBannerAnalysis();
+                    System.out.println(doStandardBannerAnalysis());
             }
             return;
         }
@@ -310,35 +428,34 @@ public class WishHistoryApp extends JFrame {
     }
 
     // EFFECTS: analyzes the standard banner wishing history
-    private void doStandardBannerAnalysis() {
-        System.out.println("You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity.");
-        System.out.println("The probability that you will pull a five-star item on your next wish is "
+    private String doStandardBannerAnalysis() {
+        String output = "You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity. \n"
+                + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getStandardBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
-                + "%...");
-        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getStandardBannerHistory().calculateFourStarProbability(5.1) + "%.");
+                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
+                + wishHistory.getStandardBannerHistory().calculateFourStarProbability(5.1) + "%.";
+        return output;
     }
 
     // EFFECTS: analyzes the weapon banner wishing history
-    private void doWeaponBannerAnalysis() {
-        System.out.println("You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity.");
-        System.out.println("The probability that you will pull a five-star item on your next wish is "
+    private String doWeaponBannerAnalysis() {
+        String output = "You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity. \n"
+                + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getWeaponBannerHistory().calculateFiveStarProbability(80, 63, 0.7)
-                + "%...");
-        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getWeaponBannerHistory().calculateFourStarProbability(6) + "%.");
-        System.out.println("You have " + wishHistory.getWeaponBannerHistory().getFatePoints() + " Fate points.");
+                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
+                + wishHistory.getWeaponBannerHistory().calculateFourStarProbability(6) + "%."
+                + "\nYou have " + wishHistory.getWeaponBannerHistory().getFatePoints() + " Fate points.";
+        return output;
     }
 
     // EFFECTS: analyzes the character banner wishing history
-    private void doCharacterBannerAnalysis() {
-        System.out.println("You currently have " + wishHistory
-                .getCharacterBannerHistory().getFiveStarPity() + " pity.");
-        System.out.println("The probability that you will pull a five-star item on your next wish is "
+    private String doCharacterBannerAnalysis() {
+        String output = "You currently have " + wishHistory.getCharacterBannerHistory().getFiveStarPity() + " pity. \n"
+                + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getCharacterBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
-                + "%...");
-        System.out.println("and the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getCharacterBannerHistory().calculateFourStarProbability(5.1) + "%.");
+                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
+                + wishHistory.getCharacterBannerHistory().calculateFourStarProbability(5.1) + "%.";
+        return output;
     }
 
 

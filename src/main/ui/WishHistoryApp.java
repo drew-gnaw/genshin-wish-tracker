@@ -23,8 +23,18 @@ public class WishHistoryApp extends JFrame {
     private Scanner input;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+
+    private String activeBanner;
     private JPanel buttonPanel;
+    private JPanel bannerPanel;
+    private JButton recordButton;
     private JButton deleteButton;
+    private JButton viewButton;
+    private JButton analyzeButton;
+    private JButton standardButton;
+    private JButton weaponButton;
+    private JButton characterButton;
+    private JLabel currentBanner;
 
     public StandardBanner getStandardBannerHistory() {
         return wishHistory.getStandardBannerHistory();
@@ -42,19 +52,47 @@ public class WishHistoryApp extends JFrame {
     public WishHistoryApp() {
         super("Wishing History");
         initializeGraphics();
-        buttonPanel = new JPanel();
-        deleteButton = new JButton("Delete");
-        //deleteButton.setBounds(50, 100, 20, 10);
-        buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(deleteButton);
-        add(buttonPanel, BorderLayout.SOUTH);
-        //buttonPanel.setVisible(true);
+        initializeActionButtons();
+        initializeBannerButtons();
         setVisible(true);
         runWishTracker();
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
 
 
+    }
+
+    private void initializeActionButtons() {
+        buttonPanel = new JPanel();
+        recordButton = new JButton("Record");
+        deleteButton = new JButton("Delete");
+        viewButton = new JButton("View History");
+        analyzeButton = new JButton("Analyze");
+
+        buttonPanel.setLayout(new GridLayout(0, 1));
+        buttonPanel.add(recordButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(viewButton);
+        buttonPanel.add(analyzeButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void initializeBannerButtons() {
+        bannerPanel = new JPanel();
+        activeBanner = "Standard";
+        initializeStandardButton();
+        initializeWeaponButton();
+        initializeCharacterButton();
+        currentBanner = new JLabel(activeBanner);
+
+        bannerPanel.setLayout(new BoxLayout(bannerPanel, BoxLayout.X_AXIS));
+        bannerPanel.add(standardButton);
+        bannerPanel.add(weaponButton);
+        bannerPanel.add(characterButton);
+
+        add(bannerPanel, BorderLayout.NORTH);
+        add(currentBanner, BorderLayout.EAST);
     }
 
     private void initializeGraphics() {
@@ -64,6 +102,39 @@ public class WishHistoryApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private void updateCurrentBanner() {
+        currentBanner.setText(activeBanner);
+    }
+
+    private void initializeStandardButton() {
+        standardButton = new JButton("Standard");
+        standardButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                activeBanner = "Standard";
+                updateCurrentBanner();
+            }
+        });
+    }
+
+    private void initializeWeaponButton() {
+        weaponButton = new JButton("Weapon");
+        weaponButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                activeBanner = "Weapon";
+                updateCurrentBanner();
+            }
+        });
+    }
+
+    private void initializeCharacterButton() {
+        characterButton = new JButton("Character");
+        characterButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                activeBanner = "Character";
+                updateCurrentBanner();
+            }
+        });
+    }
 
     // MODIFIES: this
     // EFFECTS: allows user to give input

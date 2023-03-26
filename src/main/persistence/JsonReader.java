@@ -59,6 +59,7 @@ public class JsonReader {
         }
     }
 
+    // REQUIRES: banner is one of "standard", "character", or "weapon"
     // MODIFIES: wh
     // EFFECTS: parses wish from JSON object and adds it to wish history's specified banner
     private void addWish(WishHistory wh, JSONObject jsonObject, String banner) {

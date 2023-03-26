@@ -12,7 +12,6 @@ public class WishHistory implements Writable {
     private StandardBanner standardBannerHistory;
     private CharacterBanner characterBannerHistory;
     private WeaponBanner weaponBannerHistory;
-    private Scanner input;
 
     public StandardBanner getStandardBannerHistory() {
         return standardBannerHistory;

@@ -4,18 +4,27 @@ import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 // represents the wishing history on the three types of banners
-public class WishHistoryApp {
+public class WishHistoryApp extends JFrame {
 
     private static final String JSON_STORE = "./data/wishHistory.json";
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
     private WishHistory wishHistory;
     private Scanner input;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private JPanel buttonPanel;
+    private JButton deleteButton;
 
     public StandardBanner getStandardBannerHistory() {
         return wishHistory.getStandardBannerHistory();
@@ -31,10 +40,30 @@ public class WishHistoryApp {
 
     // EFFECTS: runs the wish tracker
     public WishHistoryApp() {
+        super("Wishing History");
+        initializeGraphics();
+        buttonPanel = new JPanel();
+        deleteButton = new JButton("Delete");
+        //deleteButton.setBounds(50, 100, 20, 10);
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.add(deleteButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+        //buttonPanel.setVisible(true);
+        setVisible(true);
+        runWishTracker();
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
-        runWishTracker();
+
+
     }
+
+    private void initializeGraphics() {
+        setLayout(new BorderLayout());
+        setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }
+
 
     // MODIFIES: this
     // EFFECTS: allows user to give input

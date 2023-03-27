@@ -1,18 +1,25 @@
 {
-    "standard": [],
-    "weapon": [],
-    "character": [
+    "standard": [
         {
             "result": "Debate Club",
             "rarity": 3
         },
         {
-            "result": "Skyrider Sword",
+            "result": "Debate Club",
             "rarity": 3
         },
         {
-            "result": "Jean",
+            "result": "Debate Club",
+            "rarity": 3
+        },
+        {
+            "result": "Mona",
             "rarity": 5
         }
-    ]
+    ],
+    "weapon": [{
+        "result": "Primordial Jade Cutter",
+        "rarity": 5
+    }],
+    "character": []
 }

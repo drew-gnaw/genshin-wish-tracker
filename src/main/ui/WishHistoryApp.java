@@ -4,10 +4,13 @@ import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -18,7 +21,7 @@ public class WishHistoryApp extends JFrame {
 
     private static final String JSON_STORE = "./data/wishHistory.json";
     private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    private static final int HEIGHT = 600;
     private WishHistory wishHistory;
     private Scanner input;
     private JsonWriter jsonWriter;
@@ -26,6 +29,7 @@ public class WishHistoryApp extends JFrame {
 
     private String activeBanner;
     private JPanel buttonPanel;
+    private JPanel actionPanel;
     private JPanel bannerPanel;
     private JButton recordButton;
     private JButton deleteButton;
@@ -34,10 +38,13 @@ public class WishHistoryApp extends JFrame {
     private JButton standardButton;
     private JButton weaponButton;
     private JButton characterButton;
+    private JButton saveButton;
+    private JButton loadButton;
     private JTextField textField;
     private JTextArea historyArea;
     private JTextArea analysisArea;
     private JLabel currentBanner;
+    private JLabel picLabel;
     private JScrollPane scroll;
 
     public StandardBanner getStandardBannerHistory() {
@@ -57,38 +64,51 @@ public class WishHistoryApp extends JFrame {
         super("Wishing History");
         initializeGraphics();
         initializeActionButtons();
-        initializeBannerButtons();
+        try {
+            initializeBannerButtons();
+        } catch (IOException e) {
+            System.out.println("IOEXCEPTION");
+        }
         initializeTextArea();
         setVisible(true);
-        runWishTracker();
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
-
-
+        runWishTracker();
     }
 
     private void initializeActionButtons() {
         buttonPanel = new JPanel();
-        initializeRecordButton();
+        actionPanel = new JPanel();
+        makeButtons();
         textField = new JTextField();
-        deleteButton = new JButton("Delete");
-        handleDeleteButton();
-        viewButton = new JButton("View History");
-        handleViewButton();
-        analyzeButton = new JButton("Analyze");
-        handleAnalyzeButton();
-
         buttonPanel.setLayout(new GridLayout(0, 1));
         buttonPanel.add(recordButton);
         buttonPanel.add(textField);
         buttonPanel.add(deleteButton);
         buttonPanel.add(viewButton);
         buttonPanel.add(analyzeButton);
-
-        add(buttonPanel, BorderLayout.SOUTH);
+        actionPanel.setLayout(new GridLayout(1, 0));
+        actionPanel.add(buttonPanel);
+        actionPanel.add(saveButton);
+        actionPanel.add(loadButton);
+        add(actionPanel, BorderLayout.SOUTH);
     }
 
-    private void initializeBannerButtons() {
+    private void makeButtons() {
+        initializeRecordButton();
+        deleteButton = new JButton("Delete");
+        handleDeleteButton();
+        viewButton = new JButton("View History");
+        handleViewButton();
+        analyzeButton = new JButton("Analyze");
+        handleAnalyzeButton();
+        saveButton = new JButton("Save");
+        handleSaveButton();
+        loadButton = new JButton("Load");
+        handleLoadButton();
+    }
+
+    private void initializeBannerButtons() throws IOException {
         bannerPanel = new JPanel();
         activeBanner = "Standard";
         initializeStandardButton();
@@ -100,7 +120,10 @@ public class WishHistoryApp extends JFrame {
         bannerPanel.add(standardButton);
         bannerPanel.add(weaponButton);
         bannerPanel.add(characterButton);
-
+        BufferedImage banner = ImageIO.read(new File("./images/standardBanner.jpeg"));
+        picLabel = new JLabel(new ImageIcon(banner.getScaledInstance(400, 200, Image.SCALE_SMOOTH)));
+        bannerPanel.add(picLabel);
+        bannerPanel.add(Box.createVerticalStrut(200));
         add(bannerPanel, BorderLayout.NORTH);
         add(currentBanner, BorderLayout.EAST);
     }
@@ -112,6 +135,32 @@ public class WishHistoryApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private void handleSaveButton() {
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jsonWriter.open();
+                    jsonWriter.write(wishHistory);
+                    jsonWriter.close();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    private void handleLoadButton() {
+        loadButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    wishHistory = jsonReader.read();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
     private void updateCurrentBanner() {
         currentBanner.setText(activeBanner);
     }
@@ -120,7 +169,11 @@ public class WishHistoryApp extends JFrame {
         recordButton = new JButton("Record");
         recordButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                handleRecordWish();
+                try {
+                    handleRecordWish();
+                } catch (IOException r) {
+                    System.out.println("IOEXCEPTION");
+                }
             }
         });
     }
@@ -143,7 +196,7 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
-    private void handleRecordWish() {
+    private void handleRecordWish() throws IOException {
         switch (activeBanner) {
             case "Standard":
                 recordWish("s", textField.getText());
@@ -184,26 +237,26 @@ public class WishHistoryApp extends JFrame {
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 historyArea.setText(null);
-                int count = 1;
                 switch (activeBanner) {
                     case "Standard":
-                        for (Wish w : wishHistory.getStandardBannerHistory().getWishes()) {
-                            addToHistoryArea(count, w);
-                            count++;
-                        }
+                        addAllWishes(wishHistory.getStandardBannerHistory().getWishes());
+                        break;
                     case "Weapon":
-                        for (Wish w : wishHistory.getWeaponBannerHistory().getWishes()) {
-                            addToHistoryArea(count, w);
-                            count++;
-                        }
+                        addAllWishes(wishHistory.getWeaponBannerHistory().getWishes());
+                        break;
                     case "Character":
-                        for (Wish w : wishHistory.getCharacterBannerHistory().getWishes()) {
-                            addToHistoryArea(count, w);
-                            count++;
-                        }
+                        addAllWishes(wishHistory.getCharacterBannerHistory().getWishes());
                 }
             }
         });
+    }
+
+    private void addAllWishes(List<Wish> wishes) {
+        int count = 1;
+        for (Wish w : wishes) {
+            addToHistoryArea(count, w);
+            count++;
+        }
     }
 
     private void addToHistoryArea(int count, Wish w) {
@@ -230,6 +283,13 @@ public class WishHistoryApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Standard";
                 updateCurrentBanner();
+                BufferedImage standardBanner = null;
+                try {
+                    standardBanner = ImageIO.read(new File("./images/standardBanner.jpeg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                picLabel.setIcon(new ImageIcon("./images/standardBanner.jpeg"));
             }
         });
     }
@@ -240,6 +300,13 @@ public class WishHistoryApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Weapon";
                 updateCurrentBanner();
+                BufferedImage weaponBanner = null;
+                try {
+                    weaponBanner = ImageIO.read(new File("./images/weaponBanner.jpeg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                picLabel.setIcon(new ImageIcon("./images/weaponBanner.jpeg"));
             }
         });
     }
@@ -250,6 +317,13 @@ public class WishHistoryApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Character";
                 updateCurrentBanner();
+                BufferedImage characterBanner;
+                try {
+                    characterBanner = ImageIO.read(new File("./images/characterBanner.jpeg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                picLabel.setIcon(new ImageIcon("./images/characterBanner.jpeg"));
             }
         });
     }

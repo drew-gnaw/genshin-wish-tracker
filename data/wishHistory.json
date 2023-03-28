@@ -1,25 +1,5 @@
 {
-    "standard": [
-        {
-            "result": "Debate Club",
-            "rarity": 3
-        },
-        {
-            "result": "Debate Club",
-            "rarity": 3
-        },
-        {
-            "result": "Debate Club",
-            "rarity": 3
-        },
-        {
-            "result": "Mona",
-            "rarity": 5
-        }
-    ],
-    "weapon": [{
-        "result": "Primordial Jade Cutter",
-        "rarity": 5
-    }],
+    "standard": [],
+    "weapon": [],
     "character": []
 }

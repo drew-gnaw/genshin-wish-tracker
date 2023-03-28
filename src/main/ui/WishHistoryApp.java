@@ -112,7 +112,7 @@ public class WishHistoryApp extends JFrame {
         bannerPanel.add(weaponButton);
         bannerPanel.add(characterButton);
         BufferedImage banner = ImageIO.read(new File("./images/standardBanner.jpeg"));
-        picLabel = new JLabel(new ImageIcon(banner.getScaledInstance(400, 200, Image.SCALE_SMOOTH)));
+        picLabel = new JLabel(new ImageIcon(banner.getScaledInstance(296, 170, Image.SCALE_SMOOTH)));
         bannerPanel.add(picLabel);
         bannerPanel.add(Box.createVerticalStrut(200));
         add(bannerPanel, BorderLayout.NORTH);

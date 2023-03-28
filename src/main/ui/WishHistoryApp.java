@@ -28,9 +28,6 @@ public class WishHistoryApp extends JFrame {
     private JsonReader jsonReader;
 
     private String activeBanner;
-    private JPanel buttonPanel;
-    private JPanel actionPanel;
-    private JPanel bannerPanel;
     private JButton recordButton;
     private JButton deleteButton;
     private JButton viewButton;
@@ -45,20 +42,8 @@ public class WishHistoryApp extends JFrame {
     private JTextArea analysisArea;
     private JLabel currentBanner;
     private JLabel picLabel;
-    private JScrollPane scroll;
 
-    public StandardBanner getStandardBannerHistory() {
-        return wishHistory.getStandardBannerHistory();
-    }
-
-    public CharacterBanner getCharacterBannerHistory() {
-        return wishHistory.getCharacterBannerHistory();
-    }
-
-    public WeaponBanner getWeaponBannerHistory() {
-        return wishHistory.getWeaponBannerHistory();
-    }
-
+    // MODIFIES: this
     // EFFECTS: runs the wish tracker
     public WishHistoryApp() {
         super("Wishing History");
@@ -76,9 +61,11 @@ public class WishHistoryApp extends JFrame {
         runWishTracker();
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes all action buttons
     private void initializeActionButtons() {
-        buttonPanel = new JPanel();
-        actionPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
+        JPanel actionPanel = new JPanel();
         makeButtons();
         textField = new JTextField();
         buttonPanel.setLayout(new GridLayout(0, 1));
@@ -94,6 +81,8 @@ public class WishHistoryApp extends JFrame {
         add(actionPanel, BorderLayout.SOUTH);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes action panel buttons
     private void makeButtons() {
         initializeRecordButton();
         deleteButton = new JButton("Delete");
@@ -108,8 +97,10 @@ public class WishHistoryApp extends JFrame {
         handleLoadButton();
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes banner option buttons and image
     private void initializeBannerButtons() throws IOException {
-        bannerPanel = new JPanel();
+        JPanel bannerPanel = new JPanel();
         activeBanner = "Standard";
         initializeStandardButton();
         initializeWeaponButton();
@@ -128,6 +119,8 @@ public class WishHistoryApp extends JFrame {
         add(currentBanner, BorderLayout.EAST);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes JFrame
     private void initializeGraphics() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -135,6 +128,7 @@ public class WishHistoryApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // EFFECTS: adds an ActionListener to save button
     private void handleSaveButton() {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -149,6 +143,7 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // EFFECTS: adds an ActionListener to load button
     private void handleLoadButton() {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -161,10 +156,14 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the text on the right side of GUI to activeBanner
     private void updateCurrentBanner() {
         currentBanner.setText(activeBanner);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes and adds an ActionListener to record button
     private void initializeRecordButton() {
         recordButton = new JButton("Record");
         recordButton.addActionListener(new ActionListener() {
@@ -178,6 +177,8 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds an ActionListener to analyze button
     private void handleAnalyzeButton() {
         analyzeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -196,6 +197,8 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: records the wish from textField
     private void handleRecordWish() throws IOException {
         switch (activeBanner) {
             case "Standard":
@@ -211,6 +214,8 @@ public class WishHistoryApp extends JFrame {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds an ActionListener to delete button
     private void handleDeleteButton() {
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -233,6 +238,8 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds an ActionListener to view button
     private void handleViewButton() {
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -251,6 +258,8 @@ public class WishHistoryApp extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds wishes into the viewing window
     private void addAllWishes(List<Wish> wishes) {
         int count = 1;
         for (Wish w : wishes) {
@@ -259,14 +268,18 @@ public class WishHistoryApp extends JFrame {
         }
     }
 
+    // REQUIRES: count >= 1
+    // EFFECTS: prints a wish into the viewing window with appropriate formatting
     private void addToHistoryArea(int count, Wish w) {
         historyArea.append(count + ". " + w.getResult() + ", Rarity: " + w.getRarity() + "\n");
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the viewing window
     private void initializeTextArea() {
         historyArea = new JTextArea(30, 20);
         historyArea.setEditable(false);
-        scroll = new JScrollPane(historyArea);
+        JScrollPane scroll = new JScrollPane(historyArea);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scroll.setLayout(new ScrollPaneLayout());
         add(scroll, BorderLayout.WEST);
@@ -277,52 +290,40 @@ public class WishHistoryApp extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the standard button and adds appropriate ActionListener
     private void initializeStandardButton() {
         standardButton = new JButton("Standard");
         standardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Standard";
                 updateCurrentBanner();
-                BufferedImage standardBanner = null;
-                try {
-                    standardBanner = ImageIO.read(new File("./images/standardBanner.jpeg"));
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
                 picLabel.setIcon(new ImageIcon("./images/standardBanner.jpeg"));
             }
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the weapon button and adds appropriate ActionListener
     private void initializeWeaponButton() {
         weaponButton = new JButton("Weapon");
         weaponButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Weapon";
                 updateCurrentBanner();
-                BufferedImage weaponBanner = null;
-                try {
-                    weaponBanner = ImageIO.read(new File("./images/weaponBanner.jpeg"));
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
                 picLabel.setIcon(new ImageIcon("./images/weaponBanner.jpeg"));
             }
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the character button and adds appropriate ActionListener
     private void initializeCharacterButton() {
         characterButton = new JButton("Character");
         characterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 activeBanner = "Character";
                 updateCurrentBanner();
-                BufferedImage characterBanner;
-                try {
-                    characterBanner = ImageIO.read(new File("./images/characterBanner.jpeg"));
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
                 picLabel.setIcon(new ImageIcon("./images/characterBanner.jpeg"));
             }
         });
@@ -503,33 +504,30 @@ public class WishHistoryApp extends JFrame {
 
     // EFFECTS: analyzes the standard banner wishing history
     private String doStandardBannerAnalysis() {
-        String output = "You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity. \n"
+        return "You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity. \n"
                 + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getStandardBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
                 + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
                 + wishHistory.getStandardBannerHistory().calculateFourStarProbability(5.1) + "%.";
-        return output;
     }
 
     // EFFECTS: analyzes the weapon banner wishing history
     private String doWeaponBannerAnalysis() {
-        String output = "You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity. \n"
+        return "You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity. \n"
                 + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getWeaponBannerHistory().calculateFiveStarProbability(80, 63, 0.7)
                 + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
                 + wishHistory.getWeaponBannerHistory().calculateFourStarProbability(6) + "%."
                 + "\nYou have " + wishHistory.getWeaponBannerHistory().getFatePoints() + " Fate points.";
-        return output;
     }
 
     // EFFECTS: analyzes the character banner wishing history
     private String doCharacterBannerAnalysis() {
-        String output = "You currently have " + wishHistory.getCharacterBannerHistory().getFiveStarPity() + " pity. \n"
+        return "You currently have " + wishHistory.getCharacterBannerHistory().getFiveStarPity() + " pity. \n"
                 + "The probability that you will pull a five-star item on your next wish is "
                 + wishHistory.getCharacterBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
                 + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
                 + wishHistory.getCharacterBannerHistory().calculateFourStarProbability(5.1) + "%.";
-        return output;
     }
 
 

@@ -206,8 +206,7 @@ public class WishHistoryApp extends JFrame implements WindowListener {
                 wishHistory.recordWish("s", textField.getText());
                 break;
             case "Weapon":
-                wishHistory.getWeaponBannerHistory().addWish(new Wish(textField.getText(), wishHistory
-                        .getWeaponBannerHistory().findRarity(textField.getText())));
+                wishHistory.recordWish("w", textField.getText());
                 break;
             case "Character":
                 wishHistory.recordWish("c", textField.getText());

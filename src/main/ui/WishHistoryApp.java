@@ -563,7 +563,7 @@ public class WishHistoryApp extends JFrame implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-        System.out.println("hi");
+
     }
 
     @Override

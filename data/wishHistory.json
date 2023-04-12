@@ -1,5 +1,18 @@
 {
-    "standard": [],
+    "standard": [
+        {
+            "result": "Debate Club",
+            "rarity": 3
+        },
+        {
+            "result": "Debate Club",
+            "rarity": 3
+        },
+        {
+            "result": "Debate Club",
+            "rarity": 3
+        }
+    ],
     "weapon": [],
     "character": []
 }

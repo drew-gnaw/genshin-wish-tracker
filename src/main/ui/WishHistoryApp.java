@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.Event;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -9,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +20,7 @@ import java.util.*;
 import java.util.List;
 
 // represents the wishing history on the three types of banners
-public class WishHistoryApp extends JFrame {
+public class WishHistoryApp extends JFrame implements WindowListener {
 
     private static final String JSON_STORE = "./data/wishHistory.json";
     private static final int WIDTH = 600;
@@ -184,13 +187,13 @@ public class WishHistoryApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 switch (activeBanner) {
                     case "Standard":
-                        analysisArea.setText(doStandardBannerAnalysis());
+                        analysisArea.setText(wishHistory.doStandardBannerAnalysis());
                         break;
                     case "Weapon":
-                        analysisArea.setText(doWeaponBannerAnalysis());
+                        analysisArea.setText(wishHistory.doWeaponBannerAnalysis());
                         break;
                     case "Character":
-                        analysisArea.setText(doCharacterBannerAnalysis());
+                        analysisArea.setText(wishHistory.doCharacterBannerAnalysis());
                         break;
                 }
             }
@@ -202,14 +205,14 @@ public class WishHistoryApp extends JFrame {
     private void handleRecordWish() throws IOException {
         switch (activeBanner) {
             case "Standard":
-                recordWish("s", textField.getText());
+                wishHistory.recordWish("s", textField.getText());
                 break;
             case "Weapon":
                 wishHistory.getWeaponBannerHistory().addWish(new Wish(textField.getText(), wishHistory
                         .getWeaponBannerHistory().findRarity(textField.getText())));
                 break;
             case "Character":
-                recordWish("c", textField.getText());
+                wishHistory.recordWish("c", textField.getText());
                 break;
         }
     }
@@ -222,15 +225,15 @@ public class WishHistoryApp extends JFrame {
                 switch (activeBanner) {
                     case "Standard":
                         if (!(wishHistory.getStandardBannerHistory().getWishes().size() == 0)) {
-                            removeWish(activeBanner.toLowerCase());
+                            wishHistory.removeWish(activeBanner.toLowerCase());
                         }
                     case "Weapon":
                         if (!(wishHistory.getWeaponBannerHistory().getWishes().size() == 0)) {
-                            removeWish(activeBanner.toLowerCase());
+                            wishHistory.removeWish(activeBanner.toLowerCase());
                         }
                     case "Character":
                         if (!(wishHistory.getCharacterBannerHistory().getWishes().size() == 0)) {
-                            removeWish(activeBanner.toLowerCase());
+                            wishHistory.removeWish(activeBanner.toLowerCase());
                         }
                 }
 
@@ -342,6 +345,9 @@ public class WishHistoryApp extends JFrame {
             cmd = cmd.toLowerCase();
 
             if (cmd.equals("q")) {
+                for (Event v : EventLog.getInstance()) {
+                    System.out.println(v.toString());
+                }
                 running = false;
             } else {
                 processCommand(cmd);
@@ -407,17 +413,17 @@ public class WishHistoryApp extends JFrame {
             if (checkIfEmpty(wishHistory.getCharacterBannerHistory().getWishes())) {
                 return;
             }
-            removeWish("character");
+            wishHistory.removeWish("character");
         } else if (banner.equals("w")) {
             if (wishHistory.getWeaponBannerHistory().checkEmpty()) {
                 return;
             }
-            removeWish("weapon");
+            wishHistory.removeWish("weapon");
         } else if (banner.equals("s")) {
             if (wishHistory.getStandardBannerHistory().checkEmpty()) {
                 return;
             }
-            removeWish("standard");
+            wishHistory.removeWish("standard");
         } else {
             System.out.println("Invalid Input!");
             return;
@@ -425,18 +431,7 @@ public class WishHistoryApp extends JFrame {
         System.out.println("Removed the latest wish!");
     }
 
-    private void removeWish(String banner) {
-        if (banner.equals("character")) {
-            wishHistory.getCharacterBannerHistory().getWishes()
-                    .remove(wishHistory.getCharacterBannerHistory().getSize() - 1);
-        } else if (banner.equals("weapon")) {
-            wishHistory.getWeaponBannerHistory().getWishes()
-                    .remove(wishHistory.getWeaponBannerHistory().getSize() - 1);
-        } else if (banner.equals("standard")) {
-            wishHistory.getStandardBannerHistory().getWishes()
-                    .remove(wishHistory.getStandardBannerHistory().getSize() - 1);
-        }
-    }
+
 
     // EFFECTS: checks whether the given list is empty and produces appropriate response
     private boolean checkIfEmpty(List<Wish> wishes) {
@@ -489,46 +484,20 @@ public class WishHistoryApp extends JFrame {
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             switch (banner) {
                 case "c":
-                    System.out.println(doCharacterBannerAnalysis());
+                    System.out.println(wishHistory.doCharacterBannerAnalysis());
                     break;
                 case "w":
-                    System.out.println(doWeaponBannerAnalysis());
+                    System.out.println(wishHistory.doWeaponBannerAnalysis());
                     break;
                 case "s":
-                    System.out.println(doStandardBannerAnalysis());
+                    System.out.println(wishHistory.doStandardBannerAnalysis());
             }
             return;
         }
         System.out.println("Invalid Input!");
     }
 
-    // EFFECTS: analyzes the standard banner wishing history
-    private String doStandardBannerAnalysis() {
-        return "You currently have " + wishHistory.getStandardBannerHistory().getFiveStarPity() + " pity. \n"
-                + "The probability that you will pull a five-star item on your next wish is "
-                + wishHistory.getStandardBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
-                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getStandardBannerHistory().calculateFourStarProbability(5.1) + "%.";
-    }
 
-    // EFFECTS: analyzes the weapon banner wishing history
-    private String doWeaponBannerAnalysis() {
-        return "You currently have " + wishHistory.getWeaponBannerHistory().getFiveStarPity() + " pity. \n"
-                + "The probability that you will pull a five-star item on your next wish is "
-                + wishHistory.getWeaponBannerHistory().calculateFiveStarProbability(80, 63, 0.7)
-                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getWeaponBannerHistory().calculateFourStarProbability(6) + "%."
-                + "\nYou have " + wishHistory.getWeaponBannerHistory().getFatePoints() + " Fate points.";
-    }
-
-    // EFFECTS: analyzes the character banner wishing history
-    private String doCharacterBannerAnalysis() {
-        return "You currently have " + wishHistory.getCharacterBannerHistory().getFiveStarPity() + " pity. \n"
-                + "The probability that you will pull a five-star item on your next wish is "
-                + wishHistory.getCharacterBannerHistory().calculateFiveStarProbability(90, 74, 0.6)
-                + "%... \nand the probability that you will pull a four-star or better item on your next wish is "
-                + wishHistory.getCharacterBannerHistory().calculateFourStarProbability(5.1) + "%.";
-    }
 
 
     // MODIFIES: this
@@ -540,7 +509,7 @@ public class WishHistoryApp extends JFrame {
         if (banner.equals("c") || banner.equals("w") || banner.equals("s")) {
             System.out.println("\nPlease enter the character or weapon you obtained");
             String result = input.next();
-            recordWish(banner, result);
+            wishHistory.recordWish(banner, result);
             System.out.println("Recorded Wish!");
             return;
         }
@@ -549,24 +518,7 @@ public class WishHistoryApp extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: adds wish to appropriate banner and checks fate points
-    private void recordWish(String banner, String result) {
-        switch (banner) {
-            case "c":
-                wishHistory.getCharacterBannerHistory().addWish(new Wish(result, wishHistory
-                        .getCharacterBannerHistory().findRarity(result)));
-                break;
-            case "w":
-                wishHistory.getWeaponBannerHistory().addWish(new Wish(result, wishHistory
-                        .getWeaponBannerHistory().findRarity(result)));
-                if ((wishHistory.getWeaponBannerHistory().findRarity(result)) == 5) {
-                    checkFatePoint();
-                }
-                break;
-            case "s":
-                wishHistory.getStandardBannerHistory().addWish(new Wish(result, wishHistory
-                        .getStandardBannerHistory().findRarity(result)));
-        }
-    }
+
 
     // EFFECTS: shows banner options to user
     private void printBannerOptions() {
@@ -614,4 +566,50 @@ public class WishHistoryApp extends JFrame {
         System.out.println("q -> quit");
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Event v : EventLog.getInstance()) {
+                    System.out.println(v.toString());
+                }
+            }
+        };
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (Event v : EventLog.getInstance()) {
+                    System.out.println(v.toString());
+                }
+            }
+        };
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }

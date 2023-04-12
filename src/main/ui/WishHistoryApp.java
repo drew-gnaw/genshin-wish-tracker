@@ -511,9 +511,6 @@ public class WishHistoryApp extends JFrame implements WindowListener {
         System.out.println("Invalid Input!");
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds wish to appropriate banner and checks fate points
-
 
     // EFFECTS: shows banner options to user
     private void printBannerOptions() {

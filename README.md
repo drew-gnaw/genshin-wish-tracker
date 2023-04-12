@@ -80,10 +80,23 @@ Removed latest wish from standard banner
 Tue Apr 11 20:23:12 PDT 2023
 Analyzed standard banner
 
+## Phase 4: Task 3
+
+A possible refactoring has to do with the fact that there are three very similar
+classes in the UML diagram; namely, the three types of banners that extend Banner.
+The program could have been refactored in a way such that Banner would have been
+concrete, had an additional field to distinguish which type of banner it was, and 
+WishHistory could have had three fields of type Banner. Another option would be
+to have a single collection of Banner, with fixed size 3. In this way, it would have
+been simpler to implement methods in WishHistory that had to use switch statements,
+since it would have been possible to access the separate banner histories without
+worrying about accessing the right field.
+
+
 ## Attributes
 
 The code used for displaying the main menu UI was adapted from the 
 TellerApp project example.
 
 The code used for the JsonReader and JsonWriter as well as their respective test
-classes was adapted from the JsonSerializationDemo project. 
+classes was adapted from the JsonSerializationDemo project.

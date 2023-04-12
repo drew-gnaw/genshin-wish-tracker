@@ -8,10 +8,7 @@ import persistence.JsonWriter;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +49,7 @@ public class WishHistoryApp extends JFrame implements WindowListener {
         super("Wishing History");
         initializeGraphics();
         initializeActionButtons();
+        addWindowListener(this);
         try {
             initializeBannerButtons();
         } catch (IOException e) {
@@ -345,9 +343,6 @@ public class WishHistoryApp extends JFrame implements WindowListener {
             cmd = cmd.toLowerCase();
 
             if (cmd.equals("q")) {
-                for (Event v : EventLog.getInstance()) {
-                    System.out.println(v.toString());
-                }
                 running = false;
             } else {
                 processCommand(cmd);
@@ -568,29 +563,19 @@ public class WishHistoryApp extends JFrame implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-
+        System.out.println("hi");
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                for (Event v : EventLog.getInstance()) {
-                    System.out.println(v.toString());
-                }
-            }
-        };
+        for (Event v : EventLog.getInstance()) {
+            System.out.println(v.toString() + "\n");
+        }
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                for (Event v : EventLog.getInstance()) {
-                    System.out.println(v.toString());
-                }
-            }
-        };
+
     }
 
     @Override

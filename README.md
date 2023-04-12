@@ -45,6 +45,41 @@ the "50/50"
 - As a user, I want to be able to load a file containing 
 information on my wishing history
 
+## Phase 3: Instructions for Grader
+
+- You can add a wish to a banner by entering the result into the text field, and
+pressing the record button
+- You can analyze the wishes on a banner by pressing the analyze button
+- You can locate the visual component next to the banner option buttons
+- You can save the state of my application by pressing the save button
+- You can reload the state of my application by pressing the load button
+
+## Phase 4: Task 2
+
+Tue Apr 11 20:22:59 PDT 2023
+Added Debate Club to standard banner
+
+Tue Apr 11 20:22:59 PDT 2023
+Added Debate Club to standard banner
+
+Tue Apr 11 20:23:01 PDT 2023
+Added Debate Club to weapon banner
+
+Tue Apr 11 20:23:03 PDT 2023
+Analyzed standard banner
+
+Tue Apr 11 20:23:06 PDT 2023
+Added Jean to standard banner
+
+Tue Apr 11 20:23:06 PDT 2023
+Analyzed standard banner
+
+Tue Apr 11 20:23:10 PDT 2023
+Removed latest wish from standard banner
+
+Tue Apr 11 20:23:12 PDT 2023
+Analyzed standard banner
+
 ## Attributes
 
 The code used for displaying the main menu UI was adapted from the 
